@@ -25,33 +25,61 @@
 
         h1 {
             text-align: center;
+            color: white;
+            margin-bottom: 20px;
         }
 
         p {
             text-align: center;
-           
+            color: white;
+            margin-bottom: 20px;
         }
 
-        img {
-    display: block; /* Remove qualquer comportamento inline */
-    margin: auto;   /* Centraliza horizontalmente */
-    position: absolute; /* Permite o posicionamento */
-    top: 50%; /* Centraliza verticalmente */
-    left: 50%; /* Centraliza horizontalmente */
-    transform: translate(-50%, -50%); /* Ajusta para centralização exata */
-}
+        /* Estilo do carrossel */
+        .carrossel {
+            width: 60%;
+            max-width: 400px;
+            overflow: hidden;
+            border-radius: 10px;
+            position: relative;
+            margin: 20px auto;
+        }
 
-        .open-sans-uniquifier {
-  font-family: "Open Sans", serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-  font-variation-settings:
-    "wdth" 100;
-}
+        .carrossel-container {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
 
- /* Estilo do botão de play */
- #play-button {
+        .carrossel img {
+            width: 100%;
+            height: auto;
+            flex-shrink: 0;
+        }
+
+        /* Botões de navegação do carrossel */
+        .carrossel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 50%;
+            font-size: 20px;
+        }
+
+        .carrossel-btn.prev {
+            left: 10px;
+        }
+
+        .carrossel-btn.next {
+            right: 10px;
+        }
+
+        /* Estilo do botão de play */
+        #play-button {
             position: fixed;
             bottom: 20px;
             left: 50%;
@@ -64,7 +92,6 @@
             cursor: pointer;
             font-size: 16px;
         }
-
     </style>
 </head>
 <body>
@@ -72,10 +99,21 @@
         <h1>Te Amo</h1>
         <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Illum temporibus ab iste sequi enim harum molestias expedita provident optio, sint vitae eum veniam asperiores quod alias repellat unde sed eaque.</p>
         
-        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAM8AAACUCAMAAAADFo1ZAAAAq1BMVEX////zMk38///5///xNEz//f/zL0vzKkfzNE/2///7/f/zLUn0AC/zIkL3/PjzJkX2wsj0bn70NlXzFzz79vf21tn56e72T2T1a3r65ufzPFPwLEP2pq/67e/4ztH2doT3usHzYXTzQlv0gI3zW233oKj13uL2l5/0VWj53+r4labzkJzwubz2TWr88+73ADfxd4v5sLnrTFrxh5H0cpD0AB7zboX0YH7oASv4UbqqAAAMtElEQVR4nO1cC7eauBbGHQiRGFEDKgiK4qvHttbx3t7+/192ExI89jyscIKezvKbrq6ZWSZkZ2c/s7Mt64EHHnjggQceeOCBBx544IErAOIPWB4oyH+3vAqjPfnrYg45Vo6+MwQlyLLSaB0KrFMLIfnnaoAlfhxExeAoEHPdmyQY9pK8P9+OJLbL8Wzz9UuFNQ2zzXE8X6rR836e9IYNLvYS5CFpR0l/EbewK0DlX77r43ixfAoB2peIAsfxEAp3y0VcDNbDXdyKF+NEbki3ezNKFFDb+vqNMbmG34ExtdkoSRFckKR2O12NJpMJxS8H23iCv2UWuvG5g++7wX5ikxZpvYEB3rM8sgouvon1D859+tZgjAmedNgquB0pYvOGyYDTN0nRIC3eyYdvHDrPg270g3H7wmBBFceH71L93QRBNtr7v1NDyEvqiM32h/SVroNumnX4y0P6YrT4L7ofZUEFTVkfEOaMtezTSsRaqF9ACpN9tsbJfj4NfmcReNM5b8XktHBCsB7t49bZASTE9/PQalp/AziHLTvbXuwyRkbLeb8/E2o7ZpydiwWLkxTOR6fJwj/jA2bcHwg13+/3x/NRizN2foqZYFHT9KSbFns+FT5vLY9J1hPWMBI2dZodNuOYlz8QzHJxoRdKctbHFj1xEIud6G8O2TSM9OjkOCfctTWfyMC1N2mTxCCIZr7eQXHMXLbd9IRTAGfHIlhPkznl2Fb0EOr2Qy3XDoRjoaBJyRp3nPTWwbmfA+m6t9kyZit5IoSyWVTFgapKT7Q97b3gzTxbB68PeDuIejOx9aQ8kMvQKgQbwiV75o2b96LgtXxAsD7M9355ZjHbRo1pBYi2LtU7h/eLLHXEcpyXv/IQoGD6k7tYr4ltv0gnD9bb4v8QIX0T1heaouu93g3JrfTrYk9aWrXwZdSQDKF06ZaSM9lvLmpT6B5arJQU9u2788xb4QMweni1Db8h2HC/HO3PX2t9AxCb3p/4mhz+z7oNzkWCUCoUs8bkW9tpL7ldMAzH+3n6B38GrPU/PC63o99tgCBAR+FsiuXQlusfxWG5aBpkPGOtNAWktZ+1/7MfaOL4k/AwupdHeyjY8UkpQ7lpYuQ3DjHVWpgkl0+LBrIOuDygfMaVNMUUH64ykuAlRBFEXPtg3j+dLtVhs/Hg4F3Hf2hnJ+tZnj0Wf718UMuxgoDDQtoiwV5/GxqmB9IjKw4PcePD1TE1oF5cipwtlobF6OwqcgqCnMNCHQmbHQ3725ARqsygXcmVd06ntNBskrdXm0fH81ZEuVaUZMIxr7Hu9xD1mTr/LK/gUjnCPK4mz94e9oWWrzAcgpwWdsj2+9Gff381PMh0JDnZVpwX0hk7uZh8Vs02grTgyq76mTn+eCiaa7nmvaqDoTfSSq7ljnoV1+ShqW8Xep6NDTIIekw6VDbhebtiogIArVytEtyn6nuMcq3o+bTq0PfXFOSFurVbne/VLTWsFXOJP1/XiKC7Ha3ozak4GHKl3Pa7dg3vHSWtQvjsVR0JaO+44q5v7MB5hz1Rnkr6bsbmfQihLvxYt5ajDFbAZcwkfEZjTkLQV9qA/6gzoTCM0oxgvKmVDHAgVwrSn5sKvtOTSNabENYjl7ijda3RyJrqwIOnhpKm004sBYAu6m4QHH3i7+ql08SBWxRBJOnU3M5XWHHpdghlHdTcIIiIO6ij3AoER6UR+MYIPYDGRWBp72ubaAf96NSSPbWArKMEaNyuO8U5vPZAamti72s77Q768t960iMBIdeBrYkw1XO6XOYxSCv+gAGA1cULlMtjIx15701YVIBUs3temx5PuBj13UlI5ypQ7ZhILgKsFT1s1mSu8hLSfiHApLM2MBlYYUEP4cc70QPBUdHzq7Jz/wY86Cn+8N3t7ph+R7BRCrtjgh5L02PfkZ7dv44eYoweEO5OMZuf300fHA3yByDU+vp++m2mMt+d0MBkInxR/HHH96p1SMcqXumYuGkA+K647S5MpoyqIFoU8S3m3w1MBoBctwh49ybMWZ0VrJX/RqmZ+AeWVIsj3LoKRWG6L/jjb2tE+29Bq5f9yrsLPU6i0hfsaGhCHX+wcd147mMI+sXVFulkhq61ol9FwEtJavwW5gpAqnPNRtxRiWDhKg+ud5MClJfo7YlMiNBBYEh+vFzZM5bfgR4kxNcu0hc/PMcMPSjTBUT49h5cFwVYfpwQnrUN0QNrdQ9K9pmR+aoAQaa0G3bXxoqTgpnS2MICNFd98jYQqKIS4veNuY+el6nrXLszRFddbRvE9w7W2TJjUzoQFhezpMWP6Nb8Of5Szs6ifsLrNdLjXlXj+LepGTwBgthu6eyFSeM31feNbHdbkwo7lYzHfs9IcrREpK9M7PimQR1ECypL6QireJP8Rxw0g+Q1wc1UAsBOVy+4mdmZ0VrHiHgR3lCCwpGih/UNx17gHbDKYtMqBRUf/GhwVDevGCeG1SqcJIgujGTBrvpotrBVJDc2XaPoWSiJlRNntvTkAiDqq8poTBLzpfKQ6hoRyfybxHVegpX0+OMGlCpApkqliLswdZF5+YPThSosoXHWyPegr0ul2CyFxpUcSlXUZdus327GQoRlTbV/cJymjVBwUDU2hLZMFyeWgEQbVdedoqZFKMTFpRzBftJ2GvoYLN1W4WizqmVw1eDIGhkV44tPNbdzKORYVR3zvMnQG4Ql1S+eKDORhH8HXWujS1/s/cFQsuU1xLzosCdF2qBphz7o6ycV1G8s++vJqkRcPI2y2c83XnwYBArLimq/OcdUhMO6NJ6NQmQoqfM2EPT0EyrCGnn4AQBI6AJhGYqy3h40dqzV56xgpZJxpOXPqhQfX4kuWOnMLV5oEcJXQcP0FAXIXL+yoA0oOQcF+enRw8/hDZ5stsNvXD0roO7G9Jt4B9COFoGW8HOMv1p4E157qnUCsfnG8OTgPTGqj3N8E7fX6jqW9LSJjEtsPzE6NwQJ1eqGxl+rdB74yEcBVqRIx+EWHSTGDIS8PkiIupoRe1WrurkWAHk7qkIt4tKDKQPhIOfg68cOGO9ulqawpJLLJ8VDRXEu5Ns+E3UB4p/nN4R+ftu7QBiWD8jIBCfWx99+gAeQ2OXLDT67ce2GB8Ofv0oz1Hr6+IRSKLE+bISPh7fu5yA4tOTFi2YhQ2wD1oecU8mdJ6a5EwtymvYKXsOzhsu9rXUR23XbH7Dk4CHvyS/fcfH5XQqFus7wf0qGbBL7Pz6kjuSLnEHp5Sybe7H9B0RzQVCxra7fr/8quQtpv+ypQCR37tSEB9BwzPWr85jN697Xeiicl+Rg3r+1KjgDCC3nFwTFIpRc1nwRBtNl+WQQu/3o5je0v60lyu3TM/pFr7qrAOD1RidyzrtZ3AUeGu50SyFC2CCrPAEEh7h8C01ds5ekNSC7L+xcW7eTcPGq2oI8CJ5cnWizKd3cmxwJ6eNP9IGhLK9y/j0U5WU6AtNJcq+C6HNI055N3LLhB5uHFUoUwj6nRVIc2/6vrxd7ItwQYE39CdZqgW17VwbhHky36sbCFtpx0LuX2XkFsFD47dTDiS2Sq25TEMj+BlqX8G+3vGb+E5DQ2+OyxRa5MhZzngidKGuM9/OmmrjUhIfS/NT+BPNZdDn2d2REyHVtAbbZ3Z4SvAcR+werVhmO2Xx5OTcDwsU5HVCb7m5cFXQFhJaW8lDaeeErvC/eAE620OTEmC4O6PqmFTdFb1nqbeLj5B3jCE47TfzSYmG67N27qeV7ADR99vtdnq/fZhFaH7XoEFnJEn5WcsTOw3onAoii9QPBXDrcLw+SsL7Tk+gMKDuaqwptAkIrlFkNYVS2GbxIqAtTm43KDimE0SS9a3jwZ6CgF/Oym6JPhId5tl7pvW4GVHd3w3yQeXd64lEBIFRxGRK5eLZ+7qgmXL31TNawqIpQvgw/jYtzAV0R4+lGXEJ9TbbTs0uv6bJsg0ZaXLjit+rI+SGIoGbFJwNSsihDsj+fUBbWQYR8RN0dufLurfHLN0MA1HtuY4k7Iur0wGunm33ZvTKexF/vvcjrIStMw/kpPxjzpVTK4XKPT2mP+fTWhdwfguBHlFOqUiVYnLJe0BtoobKxS/NP5k5fASFEsW4jK4JPmrunDrmUrK5sIPd5AJ4Mw7dMt0y0McNlY0wuA1ijzc9uBCEyM+2o4VJyiM1n4V+j114Chk/+b42YCXNXUbMVLI0CgmxxaveLic0Wsgn0X0uOgDddau8HSw/HXNOze8FLf+iYiPL8T31UPz+EZoaVOyG2FJ2/nRgF4f2MKGb/3Of1qnEI7welY97/8lc401dABtTB6vOlpD4CgE8eVz/wwAMPfHb8H6e5xNREZOTrAAAAAElFTkSuQmCC" alt="">
+        <!-- Carrossel de fotos -->
+        <div class="carrossel">
+            <div class="carrossel-container">
+                <img src="fotos/WhatsApp Image 2025-02-14 at 14.28.33 (1).jpeg" alt="Foto 1">
+                <img src="fotos/WhatsApp Image 2025-02-14 at 14.28.33 (2).jpeg" alt="Foto 2">
+                <img src="fotos/WhatsApp Image 2025-02-14 at 14.28.33 (3).jpeg" alt="Foto 3">
+                <img src="fotos/WhatsApp Image 2025-02-14 at 14.28.33 (4).jpeg" alt="Foto 4">
+            </div>
+            <button class="carrossel-btn prev">&#10094;</button>
+            <button class="carrossel-btn next">&#10095;</button>
+        </div>
     </div>
-      <!-- Elemento de áudio sem controles visíveis -->
-      <audio id="background-music" preload="auto" loop>
+
+    <!-- Elemento de áudio sem controles visíveis -->
+    <audio id="background-music" preload="auto" loop>
         <source src="musicas/manoel-gomes-parabens.mp3" type="audio/mpeg">
         Seu navegador não suporta o elemento de áudio.
     </audio>
@@ -84,6 +122,28 @@
     <button id="play-button" style="display: none;">Tocar Música</button>
 
     <script>
+        // Script do carrossel
+        const carrosselContainer = document.querySelector(".carrossel-container");
+        const prevBtn = document.querySelector(".carrossel-btn.prev");
+        const nextBtn = document.querySelector(".carrossel-btn.next");
+        const images = document.querySelectorAll(".carrossel img");
+        let currentIndex = 0;
+
+        function showImage(index) {
+            const offset = -index * 100;
+            carrosselContainer.style.transform = `translateX(${offset}%)`;
+        }
+
+        prevBtn.addEventListener("click", () => {
+            currentIndex = (currentIndex > 0) ? currentIndex - 1 : images.length - 1;
+            showImage(currentIndex);
+        });
+
+        nextBtn.addEventListener("click", () => {
+            currentIndex = (currentIndex < images.length - 1) ? currentIndex + 1 : 0;
+            showImage(currentIndex);
+        });
+
         // Função para tentar reproduzir o áudio automaticamente
         function playAudio() {
             const audio = document.getElementById("background-music");
@@ -111,9 +171,5 @@
         // Tenta reproduzir a música quando a página carregar
         window.onload = playAudio;
     </script>
-     
-    </body>
 </body>
-
-
 </html>
