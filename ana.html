@@ -21,6 +21,8 @@
             width: 100vw;
             background: linear-gradient(to bottom, red , white);
             font-family: "Open Sans", serif;
+            position: relative;
+            overflow: hidden;
         }
 
         h1 {
@@ -35,7 +37,6 @@
             margin-bottom: 20px;
         }
 
-        /* Estilo do carrossel */
         .carrossel {
             width: 60%;
             max-width: 400px;
@@ -56,7 +57,6 @@
             flex-shrink: 0;
         }
 
-        /* Botões de navegação do carrossel */
         .carrossel-btn {
             position: absolute;
             top: 50%;
@@ -78,7 +78,6 @@
             right: 10px;
         }
 
-        /* Estilo do botão de play */
         #play-button {
             position: fixed;
             bottom: 20px;
@@ -92,19 +91,61 @@
             cursor: pointer;
             font-size: 16px;
         }
+
+        #balloon-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .balloon {
+            position: absolute;
+            bottom: 0;
+            width: 50px;
+            height: 70px;
+            background-color: #ff6347;
+            border-radius: 50%;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            opacity: 0.8;
+            animation: rise 8s ease-in infinite, drift 8s ease-in infinite;
+        }
+
+        @keyframes rise {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-70vh) rotate(45deg);
+            }
+            100% {
+                transform: translateY(-100vh) rotate(90deg);
+            }
+        }
+
+        @keyframes drift {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(calc(50px * (random() - 0.5)));
+            }
+        }
+
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Te Amo</h1>
-        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Illum temporibus ab iste sequi enim harum molestias expedita provident optio, sint vitae eum veniam asperiores quod alias repellat unde sed eaque.</p>
+        <h1>Parabéns Ana!!!</h1>
+        <p>Feliz aniversário, minha baixinha!!! Você é uma pessoa muito especial para mim e tenho uma admiração imensa por você. Adoro ter sua companhia e me sinto muito realizado por ter uma namorada tão incrível como você. Espero que esse novo ciclo dos 18 anos seja repleto de coisas boas e realizações. Independente de qualquer coisa, saiba que eu estarei sempre aqui ao seu lado, te apoiando em tudo. Te amo muito!</p>
         
-        <!-- Carrossel de fotos -->
         <div class="carrossel">
             <div class="carrossel-container">
-                <img src="fotos/WhatsApp Image 2025-02-14 at 14.28.33 (1).jpeg" alt="Foto 1">
+                <img src="fotos/WhatsApp Image 2025-02-18 at 12.42.29.jpeg" alt="Foto 1">
                 <img src="fotos/WhatsApp Image 2025-02-14 at 14.28.33 (2).jpeg" alt="Foto 2">
-                <img src="fotos/WhatsApp Image 2025-02-14 at 14.28.33 (3).jpeg" alt="Foto 3">
+                <img src="fotos/WhatsApp Image 2025-02-18 at 12.43.45.jpeg" alt="Foto 3">
                 <img src="fotos/WhatsApp Image 2025-02-14 at 14.28.33 (4).jpeg" alt="Foto 4">
             </div>
             <button class="carrossel-btn prev">&#10094;</button>
@@ -112,17 +153,17 @@
         </div>
     </div>
 
-    <!-- Elemento de áudio sem controles visíveis -->
+    <div id="balloon-container"></div>
+
     <audio id="background-music" preload="auto" loop>
         <source src="musicas/manoel-gomes-parabens.mp3" type="audio/mpeg">
         Seu navegador não suporta o elemento de áudio.
     </audio>
 
-    <!-- Botão de play (inicialmente oculto) -->
     <button id="play-button" style="display: none;">Tocar Música</button>
 
     <script>
-        // Script do carrossel
+
         const carrosselContainer = document.querySelector(".carrossel-container");
         const prevBtn = document.querySelector(".carrossel-btn.prev");
         const nextBtn = document.querySelector(".carrossel-btn.next");
@@ -144,32 +185,46 @@
             showImage(currentIndex);
         });
 
-        // Função para tentar reproduzir o áudio automaticamente
         function playAudio() {
             const audio = document.getElementById("background-music");
             const playButton = document.getElementById("play-button");
 
-            // Tenta reproduzir o áudio
             audio.play()
                 .then(() => {
                     console.log("Música tocando automaticamente.");
                 })
                 .catch(error => {
                     console.error("Autoplay bloqueado:", error);
-                    // Exibe o botão de play se o autoplay for bloqueado
                     playButton.style.display = "block";
                 });
         }
 
-        // Configura o botão de play para iniciar a música
         document.getElementById("play-button").onclick = () => {
             const audio = document.getElementById("background-music");
             audio.play();
-            document.getElementById("play-button").style.display = "none"; // Oculta o botão após iniciar
+            document.getElementById("play-button").style.display = "none";
         };
 
-        // Tenta reproduzir a música quando a página carregar
         window.onload = playAudio;
+
+        function createBalloon() {
+            const balloon = document.createElement('div');
+            balloon.classList.add('balloon');
+
+            const xPosition = Math.random() * window.innerWidth;
+            balloon.style.left = `${xPosition}px`;
+
+            const colors = ['#ff6347', '#ffcc00', '#32cd32', '#1e90ff', '#ff1493'];
+            balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+
+            document.getElementById('balloon-container').appendChild(balloon);
+
+            balloon.addEventListener('animationiteration', () => {
+                balloon.remove();
+            });
+        }
+
+        setInterval(createBalloon, 1200)
     </script>
 </body>
 </html>
